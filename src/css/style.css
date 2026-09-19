@@ -110,6 +110,15 @@ a:hover {
   color: var(--bs-link-hover-color);
 }
 
+#global-nav-toggle{
+  justify-content: right;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+}
+
 /* Skip links styling */
 .skip-links ul {
   list-style-type: none;
