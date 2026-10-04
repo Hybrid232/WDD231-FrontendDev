@@ -88,14 +88,14 @@ const park = {
       title: "Black Pool",
       altText: "A visitor stands on a boardwalk near a hot spring and a lake.",
       caption: "Black Pool at the West Thumb Geyser Basin",
-      url: "https://www.nps.gov/common/uploads/grid_builder/crop16_9/F3CF233A-D445-364D-EC4CD06A498E4F91.jpg"
+      url: "https://www.nps.gov/common/uploads/structured_data/3C7D383B-1DD8-B71B-0BEC4A4D6BDF7CAD.jpg"
     },
     {
       credit: "NPS/Jim Peaco",
       title: "Beehive Geyser",
       altText: "People on a wooden boardwalk watch a geyser erupt.",
       caption: "Visitors to the Upper Geyser Basin watch Beehive Geyser erupt.",
-      url: "https://www.nps.gov/common/uploads/grid_builder/crop16_9/1041962C-1DD8-B71B-0B8E77BA2E1EA0E8.jpg"
+      url: "https://www.nps.gov/common/uploads/structured_data/3C7D334F-1DD8-B71B-0B108C7771F4E854.jpg"
     },
     {
       credit: "NPS/Jim Peaco",
@@ -141,7 +141,7 @@ const park = {
       title: "Bighorn sheep",
       altText: "Two bighorn sheep laying on the ground.",
       caption: "Two bighorn rams rest and chew their cud",
-      url: "https://www.nps.gov/common/uploads/grid_builder/crop16_9/C58775A9-C067-845D-B68CF80F484EF8FA.jpg"
+      url: "https://www.nps.gov/common/uploads/structured_data/3C7D95DD-1DD8-B71B-0BC4FA19BD72F0EC.jpg"
     },
     {
       credit: "NPS/Diane Renkin",
@@ -178,8 +178,7 @@ const park = {
   name: "Yellowstone",
   designation: "National Park"
 };
-
-export const parkInfoLinks = [
+const parkInfoLinks = [
   {
     name: "Current Conditions &#x203A;",
     link: "conditions.html",
@@ -201,6 +200,34 @@ export const parkInfoLinks = [
   }
 ];
 
-export function getParkData() {
-  return park;
+const baseUrl = "https://developer.nps.gov/api/v1/";
+const apiKey = import.meta.env.VITE_NPS_API_KEY;
+
+async function getJson(url) {
+  const options = {
+    method: "GET",
+    headers: {
+      "X-Api-Key": apiKey
+    }
+  };
+  let data = {};
+  const response = await fetch(baseUrl + url, options);
+  if (response.ok) {
+    data = await response.json();
+  } else throw new Error("response not ok");
+  return data;
+}
+
+export function getInfoLinks(data) {
+  // Why index + 2 below? no real reason. we don't want index 0 since that is the one we used for the banner...I decided to skip an image.
+  const withUpdatedImages = parkInfoLinks.map((item, index) => {
+    item.image = data[index + 2].url;
+    return item;
+  });
+  return withUpdatedImages;
+}
+
+export async function getParkData() {
+  const parkData = await getJson("parks?parkCode=yell");
+  return parkData.data[0];
 }

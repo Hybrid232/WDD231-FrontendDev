@@ -1,4 +1,4 @@
-import { parkInfoTemplate, footerTemplate } from "./template.mjs";
+import { parkInfoTemplate, footerTemplate } from "./templates.mjs";
 
 function setHeaderInfo(data) {
   // insert data into disclaimer section
