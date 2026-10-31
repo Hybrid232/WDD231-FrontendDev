@@ -229,7 +229,6 @@ export function getInfoLinks(data) {
 
 export async function getParkData() {
   const parkData = await getJson("parks?parkCode=yell ");
-  console.log(parkData.data)
   return parkData.data[0];
 }
 
